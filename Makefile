@@ -14,7 +14,7 @@ BUILD_DATE:=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 STATIC=-tags netgo -ldflags '-extldflags "-static"'
 
 build/flux-adapter: FORCE
-	go build -o "$@" $(STATIC) -ldflags "-X main.version=$(VERSION)" ./cmd/flux-adapter
+	GOOS=linux GOARCH=amd64 go build -o "$@" $(STATIC) -ldflags "-X main.version=$(VERSION)" ./cmd/flux-adapter
 
 build/tini: build/tini_$(TINI_VERSION)
 	echo "$(TINI_CHECKSUM)  $^" | shasum -a 256 -c
