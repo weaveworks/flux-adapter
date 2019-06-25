@@ -56,7 +56,7 @@ jobs:
           name: Maybe push prerelease images
           command: |
             if [ -z "${CIRCLE_TAG}" -a "${CIRCLE_BRANCH}" == "master" ]; then
-              TAG="$(CIRCLE_BRANCH)-$(git rev-parse --short HEAD)"
+              TAG="${CIRCLE_BRANCH}-$(git rev-parse --short HEAD)"
               echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
               docker tag "$IMAGE" "$PRERELEASE:$TAG"
               docker push "$PRERELEASE:$TAG"
