@@ -6,14 +6,15 @@ clean:
 	rm -rf ./build
 
 TINI_VERSION:=v0.18.0
-TINI_CHECKSUM:=12d20136605531b09a2c2dac02ccee85e1b874eb322ef6baf7561cd93f93c855
+TINI_CHECKSUM:=eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
 
 VERSION := $(shell git describe --tags --dirty --always)
 VCS_REF:=$(shell git rev-parse HEAD)
 BUILD_DATE:=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
+STATIC=-tags netgo -ldflags '-extldflags "-static"'
 
 build/flux-adapter: FORCE
-	go build -o "$@" -ldflags "-X main.version=$(VERSION)" ./cmd/flux-adapter
+	go build -o "$@" $(STATIC) -ldflags "-X main.version=$(VERSION)" ./cmd/flux-adapter
 
 build/tini: build/tini_$(TINI_VERSION)
 	echo "$(TINI_CHECKSUM)  $^" | shasum -a 256 -c
@@ -21,7 +22,7 @@ build/tini: build/tini_$(TINI_VERSION)
 	chmod a+x "$@"
 
 build/tini_$(TINI_VERSION):
-	curl -Ls -o $@ "https://github.com/krallin/tini/releases/download/$(TINI_VERSION)/tini"
+	curl -Ls -o $@ "https://github.com/krallin/tini/releases/download/$(TINI_VERSION)/tini-static-amd64"
 
 build/image.tar: Dockerfile build/flux-adapter build/tini
 	mkdir -p ./build/docker/
