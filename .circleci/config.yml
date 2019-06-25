@@ -8,6 +8,9 @@ jobs:
       # We don't need a GOPATH but CircleCI defines it, so we override it
       GOPATH: /home/circleci/go
       PATH: /bin:/usr/bin:/usr/local/go/bin:/home/circleci/go/bin
+      # this image name must match what the Makefile builds
+      IMAGE: docker.io/weaveworks/flux-adapter
+      PRERELEASE: docker.io/weaveworks/flux-adapter-prerelease
     steps:
       - checkout
       - run:
@@ -49,21 +52,24 @@ jobs:
           key: go-modules-{{ checksum "go.sum" }}
           paths:
             - "~/go/pkg/mod/"
-      # - deploy:
-      #     name: Maybe push prerelease images
-      #     command: |
-      #       if [ -z "${CIRCLE_TAG}" -a "${CIRCLE_BRANCH}" == "master" ]; then
-      #         echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
-      #         docker tag "docker.io/weaveworks/flux:$(docker/image-tag)" "docker.io/weaveworks/flux-adapter-prerelease:$(docker/image-tag)"
-      #         docker push "docker.io/weaveworks/flux-prerelease:$(docker/image-tag)"
-      #       fi
-      # - deploy:
-      #     name: Maybe push release image and upload binaries
-      #     command: |
-      #       if echo "${CIRCLE_TAG}" | grep -Eq "^[0-9]+(\.[0-9]+)*(-[a-z]+)?$"; then
-      #         echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
-      #         docker push "docker.io/weaveworks/flux-adapter:${CIRCLE_TAG}"
-      #       fi
+      - deploy:
+          name: Maybe push prerelease images
+          command: |
+            if [ -z "${CIRCLE_TAG}" -a "${CIRCLE_BRANCH}" == "master" ]; then
+              TAG="$(CIRCLE_BRANCH)-$(git rev-parse --short HEAD)"
+              echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
+              docker tag "$IMAGE" "$PRERELEASE:$TAG"
+              docker push "$PRERELEASE:$TAG"
+            fi
+      - deploy:
+          name: Maybe push release image
+          command: |
+            if echo "${CIRCLE_TAG}" | grep -Eq "^[0-9]+(\.[0-9]+)*(-[a-z]+)?$"; then
+              TAG="${CIRCLE_TAG}"
+              echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
+              docker tag "docker.io/weaveworks/flux-adapter" "docker.io/weaveworks/flux-adapter:$TAG"
+              docker push "docker.io/weaveworks/flux-adapter:$TAG"
+            fi
 
 workflows:
   version: 2
