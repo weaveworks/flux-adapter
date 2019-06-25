@@ -16,10 +16,9 @@ LABEL maintainer="Weaveworks <help@weave.works>" \
       org.label-schema.vcs-url="git@github.com:weaveworks/flux-adapter" \
       org.label-schema.vendor="Weaveworks"
 
-ENTRYPOINT [ "/sbin/tini", "--", "flux-adapter" ]
+ENTRYPOINT [ "/sbin/tini", "--", "/usr/local/bin/flux-adapter" ]
 
-ADD ./tini /sbin/tini
-
+COPY ./tini /sbin/
 COPY ./flux-adapter /usr/local/bin/
 
 ARG BUILD_DATE
