@@ -19,8 +19,9 @@ jobs:
             sudo mv go /usr/local
             mkdir -p "$HOME/go/bin"
             go version
+
       - run:
-          name: Update packages and Start Memcached
+          name: Update packages
           command: |
             # These repos fail and we don't need them:
             sudo rm /etc/apt/sources.list.d/circleci_trusty.list /etc/apt/sources.list.d/google-chrome.list
@@ -37,6 +38,7 @@ jobs:
           keys:
             - go-modules-{{ checksum "go.mod" }}
             - go-modules-
+
 #      - run: make test TEST_FLAGS="-race -tags integration -timeout 60s"
       - run: make all
       - save_cache:
