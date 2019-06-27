@@ -4,6 +4,8 @@ go 1.12
 
 require (
 	github.com/go-kit/kit v0.8.0
+	github.com/gorilla/mux v1.7.1
+	github.com/gorilla/websocket v1.4.0
 	github.com/spf13/pflag v1.0.3
 	github.com/weaveworks/flux v0.0.0-20190626150815-6f552720900b
 )
