@@ -1,3 +1,6 @@
+FROM alpine:3.10 as certs
+RUN apk --update add -U --no-cache ca-certificates
+
 FROM scratch
 
 WORKDIR /home/flux
@@ -18,6 +21,7 @@ LABEL maintainer="Weaveworks <help@weave.works>" \
 
 ENTRYPOINT [ "/sbin/tini", "--", "/usr/local/bin/flux-adapter" ]
 
+COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY ./tini /sbin/
 COPY ./flux-adapter /usr/local/bin/
 
