@@ -179,6 +179,8 @@ github.com/weaveworks/common v0.0.0-20190410110702-87611edc252e/go.mod h1:pSm+0K
 github.com/weaveworks/flux v0.0.0-20190626150815-6f552720900b h1:VBDUDokihNWV/d2cF8tvR3MGv4lrvCnGnyOF0uH1KBU=
 github.com/weaveworks/flux v0.0.0-20190626150815-6f552720900b/go.mod h1:G62yRB4dAGDBHgi/tP/a6E8YkwqUbeBX7bo+XIWjj+w=
 github.com/weaveworks/flux v0.0.0-20190627075059-6d2755eebccc h1:Mz8KgtCcDzuAOR7DxBZkkRRSDVcGYZJpmkTYmNc09A4=
+github.com/weaveworks/flux v0.0.0-20190702135944-0eb0b4bd6b83 h1:w/f/HvaaPGLs5lEi8iULFAJa82tAMn1mwJ+yt8qMf/s=
+github.com/weaveworks/flux v0.0.0-20190702135944-0eb0b4bd6b83/go.mod h1:G62yRB4dAGDBHgi/tP/a6E8YkwqUbeBX7bo+XIWjj+w=
 github.com/weaveworks/go-checkpoint v0.0.0-20170503165305-ebbb8b0518ab/go.mod h1:qkbvw5GPibQ/Nf7IZJL0UoLwmJ6858b4S/hUWRd+cH4=
 github.com/weaveworks/promrus v1.2.0 h1:jOLf6pe6/vss4qGHjXmGz4oDJQA+AOCqEL3FvvZGz7M=
 github.com/weaveworks/promrus v1.2.0/go.mod h1:SaE82+OJ91yqjrE1rsvBWVzNZKcHYFtMUyS1+Ogs/KA=
