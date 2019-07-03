@@ -1,5 +1,7 @@
 # Flux adapter for Weave Cloud
 
+[![CircleCI](https://circleci.com/gh/weaveworks/flux-adapter.svg?style=svg)](https://circleci.com/gh/weaveworks/flux-adapter)
+
 This component is used to connect a [fluxd](https://github.com/weaveworks/flux) to Weave Cloud.
 
 It's intended to be run as a sidecar in the same pod as fluxd. By default, it will connect to
