@@ -9,8 +9,9 @@ jobs:
       GOPATH: /home/circleci/go
       PATH: /bin:/usr/bin:/usr/local/go/bin:/home/circleci/go/bin
       # this image name must match what the Makefile builds
-      IMAGE: docker.io/weaveworks/flux-adapter
-      PRERELEASE: docker.io/weaveworks/flux-adapter-prerelease
+      BUILD_IMAGE: local/flux-adapter:${CIRCLE_SHA1}
+      GA_IMAGE: docker.io/weaveworks/flux-adapter
+      PRERELEASE_IMAGE: docker.io/weaveworks/flux-adapter-prerelease
     steps:
       - checkout
       - run:
@@ -43,7 +44,8 @@ jobs:
             - go-modules-
 
 #      - run: make test TEST_FLAGS="-race -tags integration -timeout 60s"
-      - run: make all
+      # Give the image a name particular to this build
+      - run: make image IMAGE_NAME="${BUILD_IMAGE}"
       - save_cache:
           key: go-build-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -58,8 +60,8 @@ jobs:
             if [ -z "${CIRCLE_TAG}" -a "${CIRCLE_BRANCH}" == "master" ]; then
               TAG="${CIRCLE_BRANCH}-$(git rev-parse --short HEAD)"
               echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
-              docker tag "$IMAGE" "$PRERELEASE:$TAG"
-              docker push "$PRERELEASE:$TAG"
+              docker tag "$BUILD_IMAGE" "$PRERELEASE_IMAGE:$TAG"
+              docker push "$PRERELEASE_IMAGE:$TAG"
             fi
       - deploy:
           name: Maybe push release image
@@ -67,8 +69,8 @@ jobs:
             if echo "${CIRCLE_TAG}" | grep -Eq "^[0-9]+(\.[0-9]+)*(-[a-z]+)?$"; then
               TAG="${CIRCLE_TAG}"
               echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin
-              docker tag "docker.io/weaveworks/flux-adapter" "docker.io/weaveworks/flux-adapter:$TAG"
-              docker push "docker.io/weaveworks/flux-adapter:$TAG"
+              docker tag "$BUILD_IMAGE" "$GA_IMAGE:$TAG"
+              docker push "$GA_IMAGE:$TAG"
             fi
 
 workflows:
