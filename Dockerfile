@@ -23,7 +23,7 @@ ENTRYPOINT [ "/sbin/tini", "--", "/usr/local/bin/flux-adapter" ]
 
 # Create minimal nsswitch.conf file to prioritize the usage of /etc/hosts over DNS queries.
 # This resolves the conflict between:
-# * fluxd using netgo for static compilation. netgo reads nsswitch.conf to mimic glibc,
+# * flux-adapter using netgo for static compilation. netgo reads nsswitch.conf to mimic glibc,
 #   defaulting to prioritize DNS queries over /etc/hosts if nsswitch.conf is missing:
 #   https://github.com/golang/go/issues/22846
 # * Alpine not including a nsswitch.conf file. Since Alpine doesn't use glibc
