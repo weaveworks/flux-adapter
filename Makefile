@@ -28,7 +28,7 @@ build/tini: build/tini_$(TINI_VERSION)
 build/tini_$(TINI_VERSION):
 	curl -Ls -o $@ "https://github.com/krallin/tini/releases/download/$(TINI_VERSION)/tini-static-amd64"
 
-build/image.tar: Dockerfile build/flux-adapter build/tini
+build/image.tar: Dockerfile build/flux-adapter build/tini nsswitch.conf
 	mkdir -p ./build/docker/
 	cp $^ ./build/docker/
 	docker build -t $(IMAGE_NAME) \
