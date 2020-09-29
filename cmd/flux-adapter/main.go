@@ -18,10 +18,10 @@ import (
 	"github.com/spf13/pflag"
 
 	//	api "github.com/weaveworks/flux/api"
-	transport "github.com/weaveworks/flux/http"
-	fluxclient "github.com/weaveworks/flux/http/client"
-	fluxserver "github.com/weaveworks/flux/http/daemon"
-	"github.com/weaveworks/flux/remote"
+	transport "github.com/fluxcd/flux/pkg/http"
+	fluxclient "github.com/fluxcd/flux/pkg/http/client"
+	fluxserver "github.com/fluxcd/flux/pkg/http/daemon"
+	"github.com/fluxcd/flux/pkg/remote"
 )
 
 type adapterConfig struct {
