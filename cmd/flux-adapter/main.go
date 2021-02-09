@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 	_ "net/http/pprof"
@@ -80,10 +82,16 @@ func main() {
 		os.Exit(1)
 	}
 
+	eventRecorder, err := createK8sEventRecorder()
+	if err != nil {
+		logger.Log("err", err)
+		os.Exit(1)
+	}
+
 	router := mux.NewRouter()
 	transport.UpstreamRoutes(router)
 	shutdown := make(chan struct{})
-	handler, err := installHandlers(router, conf, logger, shutdown)
+	handler, err := installHandlers(router, conf, logger, eventRecorder, shutdown)
 	if err != nil {
 		logger.Log("err", err)
 		os.Exit(1)
@@ -112,7 +120,7 @@ func main() {
 // endpoints for now, so that the fluxd argument `--connect` can be
 // used to target this adapter. This will be removed eventually.
 
-func installHandlers(r *mux.Router, config adapterConfig, logger log.Logger, shutdown chan struct{}) (*mux.Router, error) {
+func installHandlers(r *mux.Router, config adapterConfig, logger log.Logger, recorder *eventRecorder, shutdown chan struct{}) (*mux.Router, error) {
 	serviceURL, err := url.Parse(config.connectURL)
 	if err != nil {
 		return nil, err
@@ -125,6 +133,22 @@ func installHandlers(r *mux.Router, config adapterConfig, logger log.Logger, shu
 	}
 
 	r.Get(transport.LogEvent).HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		// Read the whole body in as a byte slice so we can decode it and send it upstream
+		body, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			http.Error(res, fmt.Sprintf("Error reading body: %s", err), 500)
+			return
+		}
+
+		// Proxy the request even if event decoder has a problem
+		err = recorder.emitK8sEvent(body)
+		if err != nil {
+			logger.Log("info", "error decoding event", "error", err)
+		}
+
+		// assign a new body with previous byte slice
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+
 		logger.Log("info", "proxying", "url", req.URL.String())
 		proxy.ServeHTTP(res, req)
 	})
