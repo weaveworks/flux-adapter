@@ -85,7 +85,7 @@ func createK8sEventRecorder() (*eventRecorder, error) {
 	}
 
 	// Get all object Kinds supported by the server so we know the preferred GroupVersion
-	_, resourceList, err := client.DiscoveryClient.ServerGroupsAndResources()
+	resourceList, err := client.DiscoveryClient.ServerPreferredNamespacedResources()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get server resource list: %w", err)
 	}
