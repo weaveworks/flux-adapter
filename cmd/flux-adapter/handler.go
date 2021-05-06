@@ -43,6 +43,7 @@ func (recorder *eventRecorder) emitK8sEvent(body []byte) error {
 		}
 		metadataJSON, _ := json.Marshal(e.Metadata)
 		annotations := map[string]string{
+			"topLevelSpan": "true",
 			"syncMetadata": string(metadataJSON),
 		}
 		fmt.Printf("sending %d events\n", len(e.ServiceIDs))
