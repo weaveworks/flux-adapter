@@ -13,7 +13,7 @@ TINI_CHECKSUM:=eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
 VERSION:=$(shell git describe --tags --dirty --always)
 VCS_REF:=$(shell git rev-parse HEAD)
 BUILD_DATE:=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
-STATIC=-tags netgo -ldflags '-extldflags "-static"'
+STATIC=-tags 'osusergo netgo' -ldflags '-extldflags "-static"'
 
 IMAGE_NAME ?= "local/flux-adapter"
 
