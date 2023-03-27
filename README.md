@@ -1,4 +1,6 @@
-# Flux adapter for Weave Cloud
+# ⚠️ [Weave Cloud has been shut down](https://www.weave.works/blog/weave-cloud-end-of-service). This repo is now archived. ⚠️
+
+## Flux adapter for Weave Cloud
 
 [![CircleCI](https://circleci.com/gh/weaveworks/flux-adapter.svg?style=svg)](https://circleci.com/gh/weaveworks/flux-adapter)
 
